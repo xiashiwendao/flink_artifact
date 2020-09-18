@@ -36,7 +36,9 @@ public class KafkaLoopProducer {
         metric.timestamp=System.currentTimeMillis();
         metric.name="mem";
         if(count%2 == 0)
-        	metric.url = "www.baidu.com";
+            metric.url = "www.baidu.com";
+        if(count%3 == 0)
+            metric.url = "cn.bing.com";
         else
         	metric.url = "leecode.org";
         Map<String, String> tags = new HashMap<>();
