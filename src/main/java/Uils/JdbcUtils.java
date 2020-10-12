@@ -15,10 +15,10 @@ public class JdbcUtils {
 
 	public static Connection getConn() {
 		PropertiesUtil.loadFile("jdbc.properties");
-		String driver = PropertiesUtil.getPropertyValue("driver");
-		String url = PropertiesUtil.getPropertyValue("url");
-		String username = PropertiesUtil.getPropertyValue("username");
-		String password = PropertiesUtil.getPropertyValue("password");
+		String driver = "com.mysql.jdbc.Driver"; //PropertiesUtil.getPropertyValue("driver");
+		String url = "jdbc:mysql://172.16.103.90:3306/url_sla?useUnicode=true&characterEncoding=utf-8&useSSL=false"; //PropertiesUtil.getPropertyValue("url");
+		String username = "root"; //PropertiesUtil.getPropertyValue("username");
+		String password = "root"; //PropertiesUtil.getPropertyValue("password");
 
 		try {
 			Class.forName(driver);
@@ -42,7 +42,7 @@ public class JdbcUtils {
 	}
 	
 	/**
-	 * 获取需要统计的网站的网址
+	 * 从数据库中获取需要统计的网站的网址
 	 * 
 	 * @return
 	 */
