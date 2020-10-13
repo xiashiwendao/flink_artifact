@@ -7,17 +7,6 @@
 	<artifactId>flink_artifact</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>flink_case</name>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!--Flink 版本 -->
-		<flink.version>1.11.1</flink.version>
-		<!--JDK 版本 -->
-		<java.version>11</java.version>
-		<!--Scala 2.11 版本 -->
-		<scala.binary.version>2.11</scala.binary.version>
-		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<maven.compiler.target>${java.version}</maven.compiler.target>
-	</properties>
 	<repositories>
 		<repository>
 			<id>aliyun</id>
@@ -36,6 +25,17 @@
 			<url>http://repo2.maven.org/maven2/</url>
 		</repository>
 	</repositories>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!--Flink 版本 -->
+		<flink.version>1.11.1</flink.version>
+		<!--JDK 版本 -->
+		<java.version>11</java.version>
+		<!--Scala 2.11 版本 -->
+		<scala.binary.version>2.11</scala.binary.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+	</properties>
 	<dependencies>
 		<!-- MySQL -->
 		<dependency>
@@ -89,6 +89,66 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 			<scope>runtime</scope>
+		</dependency>
+		
+		<!-- 流批一体相关引用 -->
+		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-json -->
+		<!-- https://mvnrepository.com/artifact/org.datanucleus/datanucleus-api-jdo -->
+		
+		<dependency>
+		    <groupId>org.apache.flink</groupId>
+		    <artifactId>flink-json</artifactId>
+		    <version>${flink.version}</version>
+		</dependency>
+		<!-- Additionally, if you want to run the Table API & SQL programs locally within your IDE, you 
+		must add one of the following set of modules, depending which planner you want to use: -->
+		<dependency>
+		  <groupId>org.apache.flink</groupId>
+		  <artifactId>flink-table-planner-blink_2.11</artifactId>
+		  <version>${flink.version}</version>
+		  <scope>provided</scope>
+		</dependency>
+		<!-- Depending on the target programming language, you need to add the Java or Scala API to a project
+		 in order to use the Table API & SQL for defining pipelines:
+		 -->
+		<dependency>
+		  <groupId>org.apache.flink</groupId>
+		  <artifactId>flink-table-api-java-bridge_2.11</artifactId>
+		  <version>${flink.version}</version>
+		  <scope>provided</scope>
+		</dependency>
+		<dependency>
+		  <groupId>org.apache.flink</groupId>
+		  <artifactId>flink-connector-hive_2.11</artifactId>
+		  <version>${flink.version}</version>
+		  <scope>provided</scope>
+		</dependency>
+		<dependency>
+		  <groupId>org.apache.flink</groupId>
+		  <artifactId>flink-hadoop-compatibility_2.11</artifactId>
+		  <version>${flink.version}</version>
+		  <scope>provided</scope>
+		</dependency>
+		
+		<!-- Hive 2.3.4 is built with Hadoop 2.7.2. We pick 2.7.5 which flink-shaded-hadoop is pre-built with, but users can pick their own hadoop version, as long as it's compatible with Hadoop 2.7.2 -->
+		
+		<dependency>
+		  <groupId>org.apache.flink</groupId>
+		  <artifactId>flink-shaded-hadoop-2-uber</artifactId>
+		  <version>2.7.5-8.0</version>
+		  <scope>provided</scope>
+		</dependency>
+		
+		<!-- Hive Metastore -->
+		<dependency>
+		    <groupId>org.apache.hive</groupId>
+		    <artifactId>hive-exec</artifactId>
+		    <version>2.3.4</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.datanucleus</groupId>
+		    <artifactId>datanucleus-api-jdo</artifactId>
+		    <version>4.1.4</version>
 		</dependency>
 	</dependencies>
 	<build>
