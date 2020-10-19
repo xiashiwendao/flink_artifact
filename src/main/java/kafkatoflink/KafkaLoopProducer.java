@@ -1,5 +1,6 @@
 package kafkatoflink;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -8,6 +9,7 @@ import com.alibaba.fastjson.JSON;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.joda.time.DateTime;
 
 /**
  * 往kafka中写数据，可以使用这个main函数进行测试一下
@@ -58,12 +60,40 @@ public class KafkaLoopProducer {
 
         producer.flush();
     }
+    
+    public static void writeToKafka2() throws InterruptedException {
+    	count += 1;
+        Properties props = new Properties();
+        props.put("bootstrap.servers", broker_list);
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer"); //key 序列化
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer"); //value 序列化
+        KafkaProducer producer = new KafkaProducer<String, String>(props);
+
+        Access_Log metric = new Access_Log();
+        long sec = new Date().getTime();
+        metric.columnType = "columnType: " + sec;
+        metric.eventType = "eventType: " + sec;
+        metric.fromType = "fromType: " + sec;
+        metric.grouponId = sec;
+        metric.merchandiseId = sec;
+        metric.partnerId = sec;
+        metric.siteId = sec;
+        metric.ts = sec;
+        metric.userId = sec;
+        
+        ProducerRecord record = new ProducerRecord<String, String>("ods_analytics_access_log", null, null, JSON.toJSONString(metric));
+        producer.send(record);
+        System.out.println("发送数据: " + JSON.toJSONString(metric));
+
+        producer.flush();
+    }
 
     public static void main(String[] args) throws InterruptedException {
-        int count = 15;
+        int count = 1500;
+        
         while (count > 0) {
-            // Thread.sleep(300);
-            writeToKafka();
+            Thread.sleep(2000);
+            writeToKafka2();
 
             count--;
         }
