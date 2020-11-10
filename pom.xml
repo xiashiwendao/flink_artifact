@@ -30,9 +30,9 @@
 		<!--Flink 版本 -->
 		<flink.version>1.11.1</flink.version>
 		<!--JDK 版本 -->
-		<java.version>11</java.version>
+		<java.version>1.8</java.version>
 		<!--Scala 2.11 版本 -->
-		<scala.binary.version>2.11</scala.binary.version>
+		<scala.binary.version>2.12</scala.binary.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 	</properties>
@@ -104,7 +104,7 @@
 		must add one of the following set of modules, depending which planner you want to use: -->
 		<dependency>
 		  <groupId>org.apache.flink</groupId>
-		  <artifactId>flink-table-planner-blink_2.11</artifactId>
+		  <artifactId>flink-table-planner-blink_${scala.binary.version}</artifactId>
 		  <version>${flink.version}</version>
 		  <scope>provided</scope>
 		</dependency>
@@ -113,19 +113,19 @@
 		 -->
 		<dependency>
 		  <groupId>org.apache.flink</groupId>
-		  <artifactId>flink-table-api-java-bridge_2.11</artifactId>
+		  <artifactId>flink-table-api-java-bridge_${scala.binary.version}</artifactId>
 		  <version>${flink.version}</version>
 		  <scope>provided</scope>
 		</dependency>
 		<dependency>
 		  <groupId>org.apache.flink</groupId>
-		  <artifactId>flink-connector-hive_2.11</artifactId>
+		  <artifactId>flink-connector-hive_${scala.binary.version}</artifactId>
 		  <version>${flink.version}</version>
 		  <scope>provided</scope>
 		</dependency>
 		<dependency>
 		  <groupId>org.apache.flink</groupId>
-		  <artifactId>flink-hadoop-compatibility_2.11</artifactId>
+		  <artifactId>flink-hadoop-compatibility_${scala.binary.version}</artifactId>
 		  <version>${flink.version}</version>
 		  <scope>provided</scope>
 		</dependency>

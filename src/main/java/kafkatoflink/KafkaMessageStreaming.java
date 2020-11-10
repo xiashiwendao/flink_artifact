@@ -42,7 +42,7 @@ public class KafkaMessageStreaming {
 		// 非常关键，一定要设置启动检查点！！
 		env.enableCheckpointing(5000);
 		env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
-
+		env.getConfig().setAutoWatermarkInterval(3000);
 		final Properties props = new Properties();
 		props.setProperty("bootstrap.servers", "172.16.103.96:9092");
 		props.put("zookeeper.connect", "172.16.103.90:2181");
@@ -56,8 +56,7 @@ public class KafkaMessageStreaming {
 		        "summary_url",                  // target topic
 		        new SimpleStringSchema(),    // serialization schema
 		        props); // fault-tolerance
-
-
+		
 		final FlinkKafkaConsumer<String> consumer = new FlinkKafkaConsumer<>(topic, new SimpleStringSchema(), props);
 		consumer.assignTimestampsAndWatermarks(new WatermarkStrategy<String>() {
 
@@ -71,6 +70,7 @@ public class KafkaMessageStreaming {
 
 					@Override
 					public void onEvent(String event, long eventTimestamp, WatermarkOutput output) {
+						System.out.println("+++++++ on event ++++++++");
 						Metric metric = JSON.parseObject(event.toString(), Metric.class);
 						if (metric.timestamp > currenttimeStamp) {
 							currenttimeStamp = metric.timestamp;
@@ -82,6 +82,7 @@ public class KafkaMessageStreaming {
 						long maxDelay = 2000;
 						Long emit_timestamp = currenttimeStamp == Long.MIN_VALUE ? currenttimeStamp
 								: currenttimeStamp - maxDelay;
+						System.out.println("++++++ emit_timestamp: " + emit_timestamp);
 						output.emitWatermark(new Watermark(emit_timestamp));
 						Timestamp ts = new Timestamp(emit_timestamp);
 						Date ts_date = ts;
@@ -95,7 +96,8 @@ public class KafkaMessageStreaming {
 		dataStreamSource.flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
 
 			private static final long serialVersionUID = 1L;
-
+//			FlatMap实现的算法：遍历的时候是从最小粒度的元素级别开始遍历（即参数value），元素将会统一无差别的放到一个Collector容器中，之前的
+//			维度边界被打破了
 			@Override
 			public void flatMap(String value, Collector<Tuple2<String, Integer>> out) throws Exception {
 				Metric metric = JSON.parseObject(value, Metric.class);
@@ -132,12 +134,11 @@ public class KafkaMessageStreaming {
 
 					@Override
 					public String map(Tuple2<String, Integer> value) throws Exception {
-						// TODO Auto-generated method stub
 						return JSON.toJSONString(value);
 					}
 				}).addSink(myProducer); // addSink必须要紧跟着map函数，如果是单独addsink将会导致将其他原始接收到的kafka下次一并输出
 		
-		
+		System.out.print("+++++++++ will execution +++++++++++++");
 //		dataStreamSource.print(); // 把从 kafka 读取到的数据打印在控制台
 //		dataStreamSource.addSink(myProducer);
 		env.execute("Flink add data source");

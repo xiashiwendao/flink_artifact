@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 
 import com.alibaba.fastjson.JSON;
 
@@ -77,7 +78,8 @@ public class KafkaLoopProducer {
         metric.grouponId = sec;
         metric.merchandiseId = sec;
         metric.partnerId = sec;
-        metric.siteId = sec;
+        Random r = new Random();
+        metric.siteId = r.nextInt(3);
         metric.ts = sec;
         metric.userId = sec;
         
