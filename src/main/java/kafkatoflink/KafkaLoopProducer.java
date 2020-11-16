@@ -89,13 +89,36 @@ public class KafkaLoopProducer {
 
         producer.flush();
     }
+    
+    public static void writeToKafka3() throws InterruptedException {
+    	count += 1;
+        Properties props = new Properties();
+        props.put("bootstrap.servers", broker_list);
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer"); //key 序列化
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer"); //value 序列化
+        KafkaProducer producer = new KafkaProducer<String, String>(props);
+
+        Apache_Log metric = new Apache_Log();
+        long sec = new Date().getTime();
+        metric.message = "message: " + sec;
+        metric.referrer = "refferer: " + sec;
+        metric.response = "200";
+        metric.tags = "tags";
+        metric.verb = "GET";
+        
+        ProducerRecord record = new ProducerRecord<String, String>("test-2", null, null, JSON.toJSONString(metric));
+        producer.send(record);
+        System.out.println("发送数据: " + JSON.toJSONString(metric));
+
+        producer.flush();
+    }
 
     public static void main(String[] args) throws InterruptedException {
         int count = 1500;
         
         while (count > 0) {
             Thread.sleep(2000);
-            writeToKafka2();
+            writeToKafka3();
 
             count--;
         }

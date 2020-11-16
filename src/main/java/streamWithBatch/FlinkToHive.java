@@ -42,9 +42,8 @@ public class FlinkToHive {
 		tableEnv.getConfig().setSqlDialect(SqlDialect.DEFAULT);
 		String table_name = "analytics_access_log_kafka";
 		String createKafkaLogTbl = " CREATE TABLE analytics_access_log_kafka (\n" + "   ts BIGINT,\n"
-				+ "   userId BIGINT,\n" + "   eventType STRING,\n" + "   fromType STRING,\n" + "   columnType STRING,\n"
-				+ "   siteId BIGINT,\n" + "   grouponId BIGINT,\n" + "   partnerId BIGINT,\n"
-				+ "   merchandiseId BIGINT,\n" + "   procTime AS PROCTIME(),\n"
+				+ "   userId BIGINT,\n" + "   eventType STRING,\n"
+				+ "   siteId BIGINT,\n" + "   procTime AS PROCTIME(),\n"
 				+ "   eventTime AS TO_TIMESTAMP(FROM_UNIXTIME(ts / 1000,'yyyy-MM-dd HH:mm:ss')),\n"
 				+ "   WATERMARK FOR eventTime AS eventTime - INTERVAL '15' SECOND\n" + " ) WITH (\n"
 				+ "   'connector' = 'kafka',\n" + "   'topic' = 'ods_analytics_access_log',\n"
